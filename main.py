@@ -25,10 +25,27 @@ def main():
     gs = chess_engine.game_state()
     load_images()
     running = True
+    selected_square = ()
+    player_action = []
     while running:
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
+            elif e.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                col, row = [pos[0] // SQ_SIZE, pos[1] // SQ_SIZE]
+                if selected_square == (row, col):
+                    player_action = []
+                    selected_square = ()
+                else:
+                    selected_square = (row, col)
+                    player_action.append(selected_square)
+                if len(player_action) == 2:
+                    move = chess_engine.move(player_action[0], player_action[1], gs.board)
+                    print(move.get_chess_notation())
+                    gs.make_move(move)
+                    selected_square = ()
+                    player_action = []
         clock.tick(MAX_FPS)
         pygame.display.flip()
         draw_game_state(screen, gs)
