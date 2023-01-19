@@ -22,7 +22,7 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
     screen.fill(pygame.Color("white"))
-    gs = chess_engine.game_state()
+    gs = chess_engine.GameState()
     load_images()
     running = True
     selected_square = ()
@@ -41,7 +41,7 @@ def main():
                     selected_square = (row, col)
                     player_action.append(selected_square)
                 if len(player_action) == 2:
-                    move = chess_engine.move(player_action[0], player_action[1], gs.board)
+                    move = chess_engine.Move(player_action[0], player_action[1], gs.board)
                     print(move.get_chess_notation())
                     gs.make_move(move)
                     selected_square = ()

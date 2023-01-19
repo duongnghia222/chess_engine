@@ -1,4 +1,4 @@
-class game_state:
+class GameState:
     def __init__(self):
         # bR = black Rook, bN = black Knight, bB = black Bishop
         # bQ = black Queen, bK = black King, bP = black Pawn
@@ -22,17 +22,17 @@ class game_state:
         self.white_turn = not self.white_turn
 
 
-class move:
-    rank_to_row = {
+class Move:
+    RANK_TO_ROW = {
         '1': 7, '2': 6, '3': 5, '4': 4,
         '5': 3, '6': 2, '7': 1, '8': 0
     }
-    row_to_rank = {v: k for k, v in rank_to_row.items()}
-    file_to_col = {
+    ROW_TO_RANK = {v: k for k, v in RANK_TO_ROW.items()}
+    FILE_TO_COL = {
         'a': 0, 'b': 1, 'c': 2, 'd': 3,
         'e': 4, 'f': 5, 'g': 6, 'h': 7
     }
-    col_to_file = {v: k for k, v in file_to_col.items()}
+    COL_TO_FILE = {v: k for k, v in FILE_TO_COL.items()}
 
     def __init__(self, start, end, board):
         self.start_row = start[0]
@@ -43,5 +43,5 @@ class move:
         self.end = board[self.end_row][self.end_col]
 
     def get_chess_notation(self):
-        return self.col_to_file[self.start_col] + self.row_to_rank[self.start_row] + \
-            self.col_to_file[self.end_col] + self.row_to_rank[self.end_row]
+        return self.COL_TO_FILE[self.start_col] + self.ROW_TO_RANK[self.start_row] + \
+               self.COL_TO_FILE[self.end_col] + self.ROW_TO_RANK[self.end_row]
