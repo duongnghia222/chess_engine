@@ -27,10 +27,16 @@ def main():
     running = True
     selected_square = ()
     player_action = []
+    valid_moves = gs.get_valid_moves()
+    made_move = False
     while running:
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 running = False
+            elif e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_z:
+                    gs.undo_move()
+                    made_move = True
             elif e.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 col, row = [pos[0] // SQ_SIZE, pos[1] // SQ_SIZE]
@@ -43,9 +49,14 @@ def main():
                 if len(player_action) == 2:
                     move = chess_engine.Move(player_action[0], player_action[1], gs.board)
                     print(move.get_chess_notation())
-                    gs.make_move(move)
+                    if move in valid_moves:
+                        gs.make_move(move)
+                        made_move = True
                     selected_square = ()
                     player_action = []
+        if made_move:
+            valid_moves = gs.get_valid_moves()
+            made_move = False
         clock.tick(MAX_FPS)
         pygame.display.flip()
         draw_game_state(screen, gs)
