@@ -56,6 +56,7 @@ def main():
                     player_action = []
         if made_move:
             valid_moves = gs.get_valid_moves()
+            print(valid_moves)
             made_move = False
         clock.tick(MAX_FPS)
         pygame.display.flip()
