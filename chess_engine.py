@@ -46,6 +46,8 @@ class GameState:
                         self.get_pawn_move(r, c, possible_moves)
                     elif piece == 'R':
                         self.get_rook_move(r, c, possible_moves)
+                    elif piece == 'N':
+                        self.get_knight_move(r, c, possible_moves)
         return possible_moves
 
     def get_pawn_move(self, r, c, possible_moves):
@@ -91,7 +93,15 @@ class GameState:
             continue
 
     def get_knight_move(self, row, col, possible_moves):
-        pass
+        directions = ((-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2))
+        enemy = 'b' if self.white_turn else 'w'
+        for d in directions:
+            end_row = row + d[0]
+            end_col = col + d[1]
+            if 0 <= end_col <= 7 and 0 <= end_row <= 7 and \
+                    (self.board[end_row][end_col][0] == enemy or self.board[end_row][end_col] == '--'):
+                possible_moves.append(Move((row, col), (end_row, end_col), self.board))
+
 
     def get_bishop_move(self, row, col, possible_moves):
         pass
