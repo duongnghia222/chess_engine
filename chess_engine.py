@@ -6,8 +6,8 @@ class GameState:
             ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
             ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
             ['--', '--', '--', '--', '--', '--', '--', '--'],
-            ['--', '--', '--', '--', '--', '--', '--', '--'],
-            ['--', '--', '--', '--', '--', '--', '--', '--'],
+            ['--', '--', '--', '--', '--', 'wR', '--', '--'],
+            ['bR', '--', '--', '--', '--', '--', '--', '--'],
             ['--', '--', '--', 'bP', '--', '--', '--', '--'],
             ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
             ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
@@ -73,7 +73,22 @@ class GameState:
                     possible_moves.append(Move((r, c), (r+1, c+1), self.board))
 
     def get_rook_move(self, row, col, possible_moves):
-        pass
+        directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
+        enemy = 'b' if self.white_turn else 'w'
+        for d in directions:
+            for i in range(1, 8):
+                end_row = row + d[0] * i
+                end_col = col + d[1] * i
+                if 0 <= end_col <= 7 and 0 <= end_row <= 7 and \
+                        (self.board[end_row][end_col][0] == enemy or self.board[end_row][end_col] == '--'):
+                    possible_moves.append(Move((row, col), (end_row, end_col), self.board))
+                    if self.board[end_row][end_col][0] == enemy:
+                        break
+                else:
+                    break
+            else:
+                continue
+            continue
 
     def get_knight_move(self, row, col, possible_moves):
         pass
