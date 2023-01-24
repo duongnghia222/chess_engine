@@ -48,6 +48,12 @@ class GameState:
                         self.get_rook_move(r, c, possible_moves)
                     elif piece == 'N':
                         self.get_knight_move(r, c, possible_moves)
+                    elif piece == 'B':
+                        self.get_bishop_move(r, c, possible_moves)
+                    elif piece == 'Q':
+                        self.get_queen_move(r, c, possible_moves)
+                    elif piece == 'K':
+                        self.get_king_move(r, c, possible_moves)
         return possible_moves
 
     def get_pawn_move(self, r, c, possible_moves):
@@ -121,10 +127,19 @@ class GameState:
             continue
 
     def get_queen_move(self, row, col, possible_moves):
-        pass
+        self.get_rook_move(row, col, possible_moves)
+        self.get_bishop_move(row, col, possible_moves)
 
     def get_king_move(self, row, col, possible_moves):
-        pass
+        directions = ((1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1))
+        enemy = 'b' if self.white_turn else 'w'
+        for d in directions:
+            end_row = row + d[0]
+            end_col = col + d[1]
+            if 0 <= end_col <= 7 and 0 <= end_row <= 7 and \
+                    (self.board[end_row][end_col][0] == enemy or self.board[end_row][end_col] == '--'):
+                possible_moves.append(Move((row, col), (end_row, end_col), self.board))
+
 
 class Move:
     RANK_TO_ROW = {
