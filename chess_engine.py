@@ -102,9 +102,23 @@ class GameState:
                     (self.board[end_row][end_col][0] == enemy or self.board[end_row][end_col] == '--'):
                 possible_moves.append(Move((row, col), (end_row, end_col), self.board))
 
-
     def get_bishop_move(self, row, col, possible_moves):
-        pass
+        directions = ((-1, -1), (1, 1), (-1, 1), (1, -1))
+        enemy = 'b' if self.white_turn else 'w'
+        for d in directions:
+            for i in range(1, 8):
+                end_row = row + d[0] * i
+                end_col = col + d[1] * i
+                if 0 <= end_col <= 7 and 0 <= end_row <= 7 and \
+                        (self.board[end_row][end_col][0] == enemy or self.board[end_row][end_col] == '--'):
+                    possible_moves.append(Move((row, col), (end_row, end_col), self.board))
+                    if self.board[end_row][end_col][0] == enemy:
+                        break
+                else:
+                    break
+            else:
+                continue
+            continue
 
     def get_queen_move(self, row, col, possible_moves):
         pass

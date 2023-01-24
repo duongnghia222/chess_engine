@@ -59,7 +59,7 @@ def main():
             made_move = False
         clock.tick(MAX_FPS)
         pygame.display.flip()
-        draw_game_state(screen, gs)
+        draw_game_state(screen, gs, selected_square)
 
 
 def draw_board(screen):
@@ -78,9 +78,17 @@ def draw_pieces(screen, board):
                 screen.blit(IMAGES[piece], pygame.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
-def draw_game_state(screen, gs):
+def draw_highlight(screen, selected_square):
+    print(selected_square)
+    if selected_square:
+        pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(SQ_SIZE * selected_square[1],
+                                                          SQ_SIZE * selected_square[0], SQ_SIZE, SQ_SIZE), 2)
+
+
+def draw_game_state(screen, gs, selected_square):
     draw_board(screen)
     draw_pieces(screen, gs.board)
+    draw_highlight(screen, selected_square)
 
 
 if __name__ == "__main__":
