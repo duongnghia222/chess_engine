@@ -17,12 +17,21 @@ class GameState:
                               'K': self.get_king_move}
         self.white_turn = True
         self.move_log = []
+        self.white_king_position = (7, 4)
+        self.black_king_position = (0, 4)
+        self.checkmate = False
+        self.stalemate = False
+
 
     def make_move(self, my_move):
         self.board[my_move.start_row][my_move.start_col] = '--'
         self.board[my_move.end_row][my_move.end_col] = my_move.start
         self.move_log.append(my_move)
         self.white_turn = not self.white_turn
+        if my_move.start == 'wK':
+            self.white_king_position = (my_move.end_row, my_move.end_col)
+        elif my_move.start == 'bK':
+            self.black_king_position = (my_move.end_row, my_move.end_col)
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -31,9 +40,41 @@ class GameState:
         self.board[last_move.start_row][last_move.start_col] = last_move.start
         self.board[last_move.end_row][last_move.end_col] = last_move.end
         self.white_turn = not self.white_turn
+        if last_move.start == 'wK':
+            self.white_king_position = (last_move.start_row, last_move.start_col)
+        elif last_move.start == 'bK':
+            self.black_king_position = (last_move.start_row, last_move.start_col)
 
     def get_valid_moves(self):
-        return self.get_all_possible_move()
+        valid_moves = self.get_all_possible_move()
+        for i in range(len(valid_moves) - 1, -1, -1):
+            self.make_move(valid_moves[i])
+            self.white_turn = not self.white_turn
+            if self.if_in_check():
+                valid_moves.remove(valid_moves[i])
+            self.white_turn = not self.white_turn
+            self.undo_move()
+        if len(valid_moves) == 0:
+            if self.if_in_check():
+                self.checkmate = True
+            else:
+                self.stalemate = True
+        return valid_moves
+
+    def if_in_check(self):
+        if self.white_turn:
+            return self.square_under_check_at_r_c(self.white_king_position[0], self.white_king_position[1])
+        else:
+            return self.square_under_check_at_r_c(self.black_king_position[0], self.black_king_position[1])
+
+    def square_under_check_at_r_c(self, r, c):
+        self.white_turn = not self.white_turn
+        opponent_moves = self.get_all_possible_move()
+        self.white_turn = not self.white_turn
+        for om in opponent_moves:
+            if om.end_row == r and om.end_col == c:
+                return True
+        return False
 
     def get_all_possible_move(self):
         possible_moves = []
